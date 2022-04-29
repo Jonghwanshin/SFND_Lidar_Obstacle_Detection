@@ -25,6 +25,10 @@ struct KdTree
 	: root(NULL)
 	{}
 
+	~KdTree()
+	{
+		delete root;
+	}
 	void insert(std::vector<float> point, int id)
 	{
 		// TODO: Fill in this function to insert a new point into the tree

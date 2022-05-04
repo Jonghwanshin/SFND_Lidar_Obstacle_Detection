@@ -7,6 +7,10 @@
 #include <string>
 #include "kdtree.h"
 
+#ifndef _POSIX_SOURCE
+typedef unsigned int uint;
+#endif
+
 // Arguments:
 // window is the region to draw box around
 // increase zoom to see more of the area
@@ -18,7 +22,7 @@ pcl::visualization::PCLVisualizer::Ptr initScene(Box window, int zoom)
   	viewer->setCameraPosition(0, 0, zoom, 0, 1, 0);
   	viewer->addCoordinateSystem (1.0);
 
-  	viewer->addCube(window.x_min, window.x_max, window.y_min, window.y_max, 0, 0, 1, 1, 1, "window");
+  	viewer->addCube(window.x_min, window.x_max, window.y_min, window.y_max, 0, 0, 0, 0, 0, "window");
   	return viewer;
 }
 

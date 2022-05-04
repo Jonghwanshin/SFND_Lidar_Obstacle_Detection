@@ -20,4 +20,5 @@ target_link_libraries (environment ${PCL_LIBRARIES})
 
 
 add_subdirectory(src/quiz/ransac)
+add_subdirectory(src/quiz/cluster)
 

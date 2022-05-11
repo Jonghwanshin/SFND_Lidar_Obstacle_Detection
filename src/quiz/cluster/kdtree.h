@@ -3,6 +3,7 @@
 
 #include "../../render/render.h"
 
+#include <queue>
 
 // Structure to represent node of kd tree
 struct Node
@@ -42,45 +43,57 @@ struct KdTree
 		
 		Node** prev = &root;
 		Node** next = &root;
-		float x = point[0], y = point[1];
 		while((*next) != NULL)
 		{
-			float x_cmp = (*prev)->point[0], y_cmp = (*prev)->point[1];
-			if((level++) % 2 == 0)
+			int idx = level++ % 2;
+			if((*prev)->point[idx] < point[idx])
 			{
-				if(x > x_cmp)
-				{
-					prev = next;
-					next = &((*next)->right);
-				}
-				else
-				{
-					prev = next;
-					next = &((*next)->left);
-				}
+				prev = next;
+				next = &((*next)->right);
 			}
 			else
 			{
-				if(y > y_cmp)
-				{
-					prev = next;
-					next = &((*next)->right);
-				}
-				else
-				{
-					prev = next;
-					next = &((*next)->left);
-				}
+				prev = next;
+				next = &((*next)->left);
 			}
 		}
 		*next = new Node(point, id);
+	}
+
+	void searchHelper(std::vector<float> target, Node* node, int depth, float distanceTol, std::vector<int>& ids)
+	{
+		if(node == NULL)
+			return;
+
+		float x_target = target[0], y_target = target[1];
+		float x_cmp = node->point[0], y_cmp = node->point[1];
+
+		if((abs(x_target - x_cmp)< distanceTol) && (abs(y_target - y_cmp)< distanceTol))
+		{
+			float distance = sqrt(pow(x_cmp - x_target, 2) + pow(y_cmp - y_target, 2));
+			if(distance <= distanceTol) //in distance
+			{
+				ids.push_back(node->id);
+			}
+		}
+
+		int idx = depth % 2;
+		if((target[idx] - distanceTol) < node->point[idx])
+		{	
+			searchHelper(target, node->left, depth+1, distanceTol, ids);	
+		}
+		if((target[idx] + distanceTol) > node->point[idx])
+		{	
+			searchHelper(target, node->right, depth+1, distanceTol, ids);
+		}
 	}
 
 	// return a list of point ids in the tree that are within distance of target
 	std::vector<int> search(std::vector<float> target, float distanceTol)
 	{
 		std::vector<int> ids;
-		
+		// x and y
+		searchHelper(target, root, 0, distanceTol, ids);
 		return ids;
 	}
 	

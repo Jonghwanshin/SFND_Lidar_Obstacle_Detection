@@ -94,13 +94,9 @@ void proximity(KdTree* tree,
 	visited[id] = true;
 	
 	std::vector<int> cluster_temp = tree->search(point, distanceTol);
-	//iterate through each nearby point
-	//nearby points = tree(point)
-	//if point has not been processed
-		//proximity(cluster)
-	for(auto idx : cluster_temp)
+	for(auto idx : cluster_temp) //iterate through each nearby point
 	{
-		if(!visited[idx])
+		if(!visited[idx]) //if point has not been processed
 		{
 			cluster.push_back(idx);
 			visited[idx] = true;
@@ -127,7 +123,7 @@ std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<flo
 	return clusters;
 
 }
-
+/*
 int main ()
 {
 
@@ -185,3 +181,4 @@ int main ()
   	  viewer->spinOnce ();
   	}
 }
+*/

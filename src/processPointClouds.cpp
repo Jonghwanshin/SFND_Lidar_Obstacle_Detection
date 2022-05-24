@@ -220,7 +220,8 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 }
 
 template <typename PointT>
-std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::Clustering(typename pcl::PointCloud<PointT>::Ptr cloud, float clusterTolerance, int minSize, int maxSize)
+std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::Clustering(
+	typename pcl::PointCloud<PointT>::Ptr cloud, float clusterTolerance, int minSize, int maxSize)
 {
 
 	// Time clustering process
@@ -286,7 +287,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
 		points.push_back(point);
 	}
 
-	// std::vector<std::vector<int>> clustersV2 = euclideanCluster(points, tree, clusterTolerance);
+	std::vector<std::vector<int>> clustersV2 = euclideanCluster(points, tree, clusterTolerance);
 
 	// if(auto cluster : clusters)
 	// {

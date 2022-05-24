@@ -1,5 +1,7 @@
 /* \author Aaron Brown */
 // Quiz on implementing kd tree
+#ifndef KDTREE_H_
+#define KDTREE_H_
 
 #include "../../render/render.h"
 
@@ -32,7 +34,6 @@ struct KdTree
 	}
 	void insert(std::vector<float> point, int id)
 	{
-		// TODO: Fill in this function to insert a new point into the tree
 		// the function should create a new node and place correctly with in the root 
 		int level = 0;
 		if(root == NULL)
@@ -43,9 +44,10 @@ struct KdTree
 		
 		Node** prev = &root;
 		Node** next = &root;
+		int dims = point.size();
 		while((*next) != NULL)
 		{
-			int idx = level++ % 2;
+			int idx = level++ % dims;
 			if((*prev)->point[idx] < point[idx])
 			{
 				prev = next;
@@ -64,20 +66,37 @@ struct KdTree
 	{
 		if(node == NULL)
 			return;
+		
+		if (node->point.size() != target.size())
+			throw std::invalid_argument("Dimension doesn't match to search");
+		
+		int dims = target.size();
+		std::vector<float> distances = std::vector<float>(dims, 0.0f);
+		bool is_too_far = false;
 
-		float x_target = target[0], y_target = target[1];
-		float x_cmp = node->point[0], y_cmp = node->point[1];
-
-		if((abs(x_target - x_cmp)< distanceTol) && (abs(y_target - y_cmp)< distanceTol))
+		for(int i = 0; i < dims; i++)
 		{
-			float distance = sqrt(pow(x_cmp - x_target, 2) + pow(y_cmp - y_target, 2));
-			if(distance <= distanceTol) //in distance
+			float dist = abs(target[i] - node->point[i]);
+			distances[i] = dist;
+			if(dist > distanceTol)
+				is_too_far = true;
+		}
+
+		if(!is_too_far)
+		{
+			float distance = 0.0f;
+			for(int i = 0; i < dims; i++)
+			{
+				distance +=	pow(distances[i], 2);
+			}
+			distance = sqrt(distance);
+			if(distance <= distanceTol)
 			{
 				ids.push_back(node->id);
 			}
 		}
 
-		int idx = depth % 2;
+		int idx = depth % dims;
 		if((target[idx] - distanceTol) < node->point[idx])
 		{	
 			searchHelper(target, node->left, depth+1, distanceTol, ids);	
@@ -100,6 +119,4 @@ struct KdTree
 
 };
 
-
-
-
+#endif

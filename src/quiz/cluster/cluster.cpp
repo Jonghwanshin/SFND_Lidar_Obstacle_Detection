@@ -1,11 +1,11 @@
 /* \author Aaron Brown */
 // Quiz on implementing simple RANSAC line fitting
 
+#include "cluster.h"
+
 #include "../../render/render.h"
 #include "../../render/box.h"
 #include <chrono>
-#include <string>
-#include "kdtree.h"
 
 #ifndef _POSIX_SOURCE
 typedef unsigned int uint;
@@ -111,21 +111,13 @@ void proximity(KdTree* tree,
 std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<float>>& points, KdTree* tree, float distanceTol)
 {
 
-	// TODO: Fill out this function to return list of indices for each cluster
-
 	std::vector<std::vector<int>> clusters;
 	std::vector<bool> visited = std::vector<bool>(points.size(), false);
-	// KdTree tree;
-	// for(int id = 0; id < points.size(); id++)
-	// {
-	// 	tree.insert(points[id], id);
-	// }
 
 	//iterate through each points
 	for(int id = 0; id < points.size(); id++)
 	{
-		//If points has not been processed
-		if(!visited[id])
+		if(!visited[id]) //If points has not been processed
 		{
 			std::vector<int> cluster = std::vector<int>(); //create cluster
 			proximity(tree, points[id], id, visited, cluster, distanceTol); //proximity(point, cluster)
@@ -151,7 +143,6 @@ int main ()
 
 	// Create data
 	std::vector<std::vector<float>> points = { {-6.2,7}, {-6.3,8.4}, {-5.2,7.1}, {-5.7,6.3}, {7.2,6.1}, {8.0,5.3}, {7.2,7.1}, {0.2,-7.1}, {1.7,-6.9}, {-1.2,-7.2}, {2.2,-8.9} };
-	//std::vector<std::vector<float>> points = { {-6.2,7}, {-6.3,8.4}, {-5.2,7.1}, {-5.7,6.3} };
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = CreateData(points);
 
 	KdTree* tree = new KdTree;
@@ -170,9 +161,7 @@ int main ()
 
   	// Time segmentation process
   	auto startTime = std::chrono::steady_clock::now();
-  	//
   	std::vector<std::vector<int>> clusters = euclideanCluster(points, tree, 3.0);
-  	//
   	auto endTime = std::chrono::steady_clock::now();
   	auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
   	std::cout << "clustering found " << clusters.size() << " and took " << elapsedTime.count() << " milliseconds" << std::endl;
@@ -195,5 +184,4 @@ int main ()
   	{
   	  viewer->spinOnce ();
   	}
-  	
 }

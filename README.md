@@ -1,13 +1,13 @@
 # Lidar Obstacle Detection
 
-![Object Detection From Lidar](/media/ObstacleDetectionFPS.gif|width=400px)
-
 ## Summary
 
 This projects segments ground plane and detects objects from point cloud
 * Read real lidar data from `sensors/data`
 * Segment the ground plant with 3D RANSAC
 * Build KD-Tree of the remaining points and detect objects with euclidean clustering
+
+<img src = "https://github.com/Jonghwanshin/SFND_Lidar_Obstacle_Detection/blob/master/media/ObstacleDetectionFPS.gif" width=400px/>
 
 ## Installation
 

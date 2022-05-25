@@ -32,37 +32,41 @@ struct KdTree
 	{
 		delete root;
 	}
-	void insert(std::vector<float> point, int id)
+
+	void insertNode(Node** node, int depth, std::vector<float> point, int id)
 	{
 		// the function should create a new node and place correctly with in the root 
-		int level = 0;
-		if(root == NULL)
+		if((*node) == NULL)
 		{
-			root = new Node(point, id);	
+			*node = new Node(point, id);	
 			return;
 		}
-		
-		Node** prev = &root;
-		Node** next = &root;
-		int dims = point.size();
-		while((*next) != NULL)
+		else
 		{
-			int idx = level++ % dims;
-			if((*prev)->point[idx] < point[idx])
+			int dims = point.size();
+			int idx = depth % dims;
+			if((*node)->point[idx] < point[idx])
 			{
-				prev = next;
-				next = &((*next)->right);
+				insertNode(&((*node)->right), depth+1, point, id);
 			}
 			else
 			{
-				prev = next;
-				next = &((*next)->left);
+				insertNode(&((*node)->left), depth+1, point, id);
 			}
 		}
-		*next = new Node(point, id);
 	}
 
-	void searchHelper(std::vector<float> target, Node* node, int depth, float distanceTol, std::vector<int>& ids)
+	void insert(std::vector<float> point, int id)
+	{
+		insertNode(&root, 0, point, id);
+	}
+
+	void searchHelper(
+		std::vector<float> target, 
+		Node* node, 
+		int depth, 
+		float distanceTol, 
+		std::vector<int>& ids)
 	{
 		if(node == NULL)
 			return;

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 add_definitions(-std=c++14)
 
+set(Qt5_DIR /opt/homebrew/Cellar/qt@5/5.15.3/lib/cmake/qt5)
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
@@ -19,10 +20,10 @@ add_executable (environment
                 src/environment.cpp 
                 src/render/render.cpp 
                 src/processPointClouds.cpp
-                src/quiz/cluster/cluster.cpp)
+                src/clustering_pcl.cpp)
 target_link_libraries (environment ${PCL_LIBRARIES})
 
 
-add_subdirectory(src/quiz/ransac)
-add_subdirectory(src/quiz/cluster)
+# add_subdirectory(src/quiz/ransac)
+# add_subdirectory(src/quiz/cluster)
 

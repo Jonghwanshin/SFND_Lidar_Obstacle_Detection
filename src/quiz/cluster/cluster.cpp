@@ -1,11 +1,11 @@
 /* \author Aaron Brown */
 // Quiz on implementing simple RANSAC line fitting
 
-#include "cluster.h"
-
 #include "../../render/render.h"
 #include "../../render/box.h"
 #include <chrono>
+
+#include "kdtree.h"
 
 #ifndef _POSIX_SOURCE
 typedef unsigned int uint;
@@ -80,31 +80,30 @@ void render2DTree(Node* node, pcl::visualization::PCLVisualizer::Ptr& viewer, Bo
 }
 
 void proximity(KdTree* tree, 
-				std::vector<float> point, 
+				const std::vector<std::vector<float>>& points,
 				int id,
 				std::vector<bool>& visited, 
 				std::vector<int>& cluster,
 				float distanceTol)
 {
-	if(visited[id])
-		return;
-	//mark point as processed
-	//add point to cluster
-	cluster.push_back(id);
-	visited[id] = true;
+	if(!visited[id]) 
+	{
+		//mark point as processed
+		//add point to cluster
+		cluster.push_back(id);
+		visited[id] = true;
+	}
 	
-	std::vector<int> cluster_temp = tree->search(point, distanceTol);
+	std::vector<int> cluster_temp = tree->search(points[id], distanceTol);
 	for(auto idx : cluster_temp) //iterate through each nearby point
 	{
-		if(!visited[idx]) //if point has not been processed
-		{
-			cluster.push_back(idx);
-			visited[idx] = true;
-		}
+		if(!visited[idx])
+			proximity(tree, points, idx, visited, cluster, distanceTol);
 	}
 }
 
-std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<float>>& points, KdTree* tree, float distanceTol)
+std::vector<std::vector<int>> euclideanCluster(
+	const std::vector<std::vector<float>>& points, KdTree* tree, float distanceTol)
 {
 
 	std::vector<std::vector<int>> clusters;
@@ -115,8 +114,8 @@ std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<flo
 	{
 		if(!visited[id]) //If points has not been processed
 		{
-			std::vector<int> cluster = std::vector<int>(); //create cluster
-			proximity(tree, points[id], id, visited, cluster, distanceTol); //proximity(point, cluster)
+			std::vector<int> cluster = std::vector<int>(); //create cluster	
+			proximity(tree, points, id, visited, cluster, distanceTol); 
 			clusters.push_back(cluster); //cluster add clusters
 		}
 	}

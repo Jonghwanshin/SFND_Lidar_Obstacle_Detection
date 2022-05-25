@@ -1,6 +1,6 @@
 # Sensor Fusion Self-Driving Car Course
 
-<img src="https://github.com/awbrown90/SensorFusionHighway/blob/master/media/ObstacleDetectionFPS.gif" width="700" height="400" />
+![Object Detection From Lidar](/media/ObstacleDetectionFPS.gif)
 
 ### Welcome to the Sensor Fusion course for self-driving cars.
 
@@ -10,7 +10,6 @@ In this course we will be talking about sensor fusion, whch is the process of ta
 
 **Radar** data is typically very sparse and in a limited range, however it can directly tell us how fast an object is moving in a certain direction. This ability makes radars a very pratical sensor for doing things like cruise control where its important to know how fast the car infront of you is traveling. Radar sensors are also very affordable and common now of days in newer cars.
 
-<<<<<<< HEAD
 **Sensor Fusion** by combing lidar's high resoultion imaging with radar's ability to measure velocity of objects we can get a better understanding of the sorrounding environment than we could using one of the sensors alone.
 
 
@@ -30,7 +29,6 @@ A few updates to the instructions above were needed.
 * BUILD_visualization needed to be manually turned on, this link shows you how to do that,
 http://www.pointclouds.org/documentation/tutorials/building_pcl.php
 
-=======
 **Sensor Fusion** by combing lidar's high resolution imaging with radar's ability to measure velocity of objects we can get a better understanding of the sorrounding environment than we could using one of the sensors alone.
 
 ## Classroom Workspace
@@ -171,4 +169,3 @@ If you get build errors related to Qt5, make sure that the path for Qt5 is corre
 [PCL Source Github](https://github.com/PointCloudLibrary/pcl)
 
 [PCL Mac Compilation Docs](https://pcl.readthedocs.io/projects/tutorials/en/latest/compiling_pcl_macosx.html#compiling-pcl-macosx)
->>>>>>> ef15da2bc172359e7d6edfdd156a2a243d10977e

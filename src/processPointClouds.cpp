@@ -5,7 +5,7 @@
 #include <unordered_set>
 
 #include "quiz/cluster/kdtree.h"
-#include "quiz/cluster/cluster.h"
+#include "cluster.h"
 
 
 // constructor:
@@ -142,23 +142,24 @@ pcl::PointIndices::Ptr ProcessPointClouds<PointT>::Ransac(typename pcl::PointClo
 				continue;
 			}
 
-			typename PointT point = cloud->points[index];
-			float x3 = point.x;
-			float y3 = point.y;
-			float z3 = point.z;
+			PointT point = cloud->points[index];
+			float x4 = point.x;
+			float y4 = point.y;
+			float z4 = point.z;
 
-			float dist = fabs(a * x3 + b * y3 + c * z3 + d) / sqrt(a * a + b * b + c * c);
+			float dist = fabs(a * x4 + b * y4 + c * z4 + d) / sqrt(a * a + b * b + c * c);
 
 			if (dist <= distanceTol)
 				inliers.insert(index);
 		}
 
-		if (inliers.size() > inliersResult->indices.size())
+		if (inliers.size() > inliersBestFitted.size())
 		{
 			inliersBestFitted = inliers;
 		}
 	}
 	// Return indicies of inliers from fitted line with most inliers
+	std::cout << "Best Fitted:" << inliersBestFitted.size() << std::endl;
 	for(auto it = inliersBestFitted.begin(); it != inliersBestFitted.end(); ++it)
 		inliersResult->indices.push_back(*it);
 	return inliersResult;
@@ -273,8 +274,6 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
 
 	std::vector<typename pcl::PointCloud<PointT>::Ptr> clusters;
 
-	// TODO:: Fill in the function to perform euclidean clustering to group detected obstacles
-	
 	// Creating the KdTree object for the search method of the extraction
 	KdTree* tree = new KdTree;
 	std::vector<std::vector<float>> points = std::vector<std::vector<float>>();
@@ -287,25 +286,19 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
 		points.push_back(point);
 	}
 
-	std::vector<std::vector<int>> clustersV2 = euclideanCluster(points, tree, clusterTolerance);
+	std::vector<std::vector<int>> clustersV2 = euclideanCluster(points, tree, clusterTolerance, minSize, maxSize);
 
-	// if(auto cluster : clusters)
-	// {
-	// 	std::cout << "PointCloud representing the Cluster: " << cluster.size() << " data points." << std::endl;
-	// }
-
-	// for (pcl::PointIndices indices : cluster_indices)e
-	// {
-	// 	typename pcl::PointCloud<PointT>::Ptr cloud_cluster(new pcl::PointCloud<PointT>);
-	// 	for (int idx : indices.indices)
-	// 		cloud_cluster->push_back(cloud->points[idx]); //*
-	// 	cloud_cluster->width = cloud_cluster->size();
-	// 	cloud_cluster->height = 1;
-	// 	cloud_cluster->is_dense = true;
-
-	// 	std::cout << "PointCloud representing the Cluster: " << cloud_cluster->size() << " data points." << std::endl;
-	// 	clusters.push_back(cloud_cluster);
-	// }
+	for(int i = 0; i < clustersV2.size(); ++i)
+	{
+		std::cout << "PointCloud representing the Cluster: " << clustersV2[i].size() << " data points." << std::endl;
+		typename pcl::PointCloud<PointT>::Ptr cloud_cluster(new pcl::PointCloud<PointT>);
+		for (int idx : clustersV2[i])
+			cloud_cluster->push_back(cloud->points[idx]); //*
+		cloud_cluster->width = cloud_cluster->size();
+		cloud_cluster->height = 1;
+		cloud_cluster->is_dense = true;
+		clusters.push_back(cloud_cluster);
+	}
 
 	auto endTime = std::chrono::steady_clock::now();
 	auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);

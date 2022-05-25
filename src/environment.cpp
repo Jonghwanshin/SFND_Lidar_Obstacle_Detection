@@ -91,12 +91,10 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
     std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> pairs = 
         pointProcessorI->SegmentPlaneV2(filterCloud, 35, 0.2);
 
-    renderPointCloud(viewer, pairs.first, "inputCloud", Color(1, 0, 0));
-    //renderPointCloud(viewer, pairs.second, "object", Color(0, 1, 0));
 
     std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = 
         pointProcessorI->ClusteringV2(
-            pairs.first, 0.7, 10, 500);
+            pairs.first, 0.4, 10, 500);
 
     int clusterId = 0;
     std::vector<Color> colors = {Color(1, 0, 0), Color(0, 0, 1), Color(0, 1, 1)};

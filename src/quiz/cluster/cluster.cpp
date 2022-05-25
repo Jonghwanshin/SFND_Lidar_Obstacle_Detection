@@ -122,7 +122,7 @@ std::vector<std::vector<int>> euclideanCluster(
 	return clusters;
 
 }
-/*
+
 int main ()
 {
 
@@ -180,4 +180,3 @@ int main ()
   	  viewer->spinOnce ();
   	}
 }
-*/

@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 add_definitions(-std=c++14)
 
-set(Qt5_DIR /opt/homebrew/Cellar/qt@5/5.15.3/lib/cmake/qt5)
+if(APPLE)
+    set(Qt5_DIR /opt/homebrew/Cellar/qt@5/5.15.3/lib/cmake/qt5)
+endif()
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
